@@ -57,10 +57,13 @@ class Game {
       //x and y position of the cars
       var x = 175 ;
       var y;
+      var textY = displayHeight - 400;
 
       for(var plr in allPlayers){
         //add 1 to the index for every loop
         index = index + 1 ;
+
+        textY = textY + 50;
 
         //position the cars a little away from each other in x direction
         x = x + 200;
@@ -68,14 +71,16 @@ class Game {
         y = displayHeight - allPlayers[plr].distance;
         cars[index-1].x = x;
         cars[index-1].y = y;
-       // console.log(index, player.index)
 
-       
+        fill(0);
+        textSize(32);
+        text(allPlayers[plr].name  + allPlayers[plr].distance,200,  textY);
+
         if (index === player.index){
-          stroke(10);
+          textSize(25);
           fill("red");
-          ellipse(x,y,60,60);
-          cars[index - 1].shapeColor = "red";
+          ellipse(cars[index-1].x, cars[index - 1].y, 80, 80);
+
           camera.position.x = displayWidth/2;
           camera.position.y = cars[index-1].y;
         }
@@ -91,14 +96,21 @@ class Game {
       player.update();
     }
 
-    if(player.distance > 3860){
+    player.readRank();
+
+    if(player.distance > 3860 && gameState === 1){
       gameState = 2;
+      player.rank = player.rank + 1;
+      Player.updateRank(player.rank);
+      
+      swal({
+        icon: "info",
+        title: "GAME OVER!" + player.name + " You are no. " + player.rank,
+        });
     }
    
-    drawSprites();
-  }
 
-  end(){
-    console.log("Game Ended");
+   
+    drawSprites();
   }
 }
